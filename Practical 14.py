@@ -1,7 +1,7 @@
-#14) With reference to practical 6th, convert that csv file to MySQL database
+#14) With reference to practical 7th, convert that .dat file to MySQL database
 
 import mysql.connector
-import csv
+import pickle
 
 DB_HOST = "localhost"
 DB_USER = "root"
@@ -20,22 +20,27 @@ cursor = conn.cursor()
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS students (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    roll_no INT,
     name VARCHAR(50),
     marks INT
 )
 """)
 
-# --- Read CSV file ---
-with open("students.csv", "r") as file:
-    data = csv.reader(file)
-    next(data)  # Skip header row if present
-
-    for row in data:
-        name, marks = row
-        cursor.execute("INSERT INTO students (name, marks) VALUES (%s, %s)", (name, marks))
+# --- Read .dat file ---
+with open("student.dat", "rb") as file:
+    try:
+        while True:
+            student = pickle.load(file)
+            if isinstance(student, dict) and "roll_no" in student:
+                roll_no = student["roll_no"]
+                name = student["name"]
+                marks = student["marks"]
+                cursor.execute("INSERT INTO students (roll_no, name, marks) VALUES (%s, %s, %s)", (roll_no, name, marks))
+    except EOFError:
+        pass  # End of file reached
 
 # --- Save and close ---
 conn.commit()
 conn.close()
 
-print("CSV file has been successfully imported into MySQL database!")
+print(".dat file has been successfully imported into MySQL database!")
