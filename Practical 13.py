@@ -8,7 +8,7 @@ conn = mysql.connector.connect(
     user="root",       
     password="root123",
     database="schooldb"
-    
+)
 cur = conn.cursor()
 
 # --- Create the marks table if not exists ---
