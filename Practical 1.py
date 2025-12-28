@@ -1,3 +1,4 @@
+#1. Write a random number generator that generates random number between 1-6, (simulates a dice).
 import random
 
 def roll_dice():
