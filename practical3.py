@@ -1,4 +1,4 @@
-#Read a text file and display the number of vowel s and / consonants, /uppercase, / lowercase, character in the file.
+#3.Read a text file and display the number of vowel s and / consonants, /uppercase, / lowercase, character in the file.
 vowels = set("aeiouAEIOU")
 alphabet = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
