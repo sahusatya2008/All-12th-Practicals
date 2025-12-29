@@ -1,12 +1,48 @@
-#15)  Make a phonebook by saving the Name and the phone number in the mysql table and when searched by the user, it should fetch the matching contacts also have the facility to edit and delete contacts.
+#15)  Make a phonebook by saving the Name and the phone number in the mysql table and when searched by the user, it should fetch the matching contacts also have the facility to edit and delete contacts.
 import mysql.connector
+
+# --- Database initialization ---
+def initialize_database():
+    # Connect without specifying database to create it
+    temp_conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root123"
+    )
+    temp_cur = temp_conn.cursor()
+
+    # Create database if it doesn't exist
+    temp_cur.execute("CREATE DATABASE IF NOT EXISTS phonebook_db")
+    temp_conn.commit()
+    temp_conn.close()
+
+    # Now connect to the database and create table
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root123",
+        database="phonebook_db"
+    )
+    cur = conn.cursor()
+
+    # Create contacts table if it doesn't exist
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS contacts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        phone VARCHAR(15) NOT NULL UNIQUE
+    )
+    """)
+    conn.commit()
+    conn.close()
+    print("Database and table initialized successfully!")
 
 # --- Database connection ---
 def connect_db():
     return mysql.connector.connect(
         host="localhost",
-        user="root",        
-        password="root123",  
+        user="root",
+        password="root123",
         database="phonebook_db"
     )
 
@@ -59,9 +95,16 @@ def view_contacts():
         print("No contacts found!\n")
     else:
         print("\n--- All Contacts ---")
+        print("+----+----------------------+----------------+")
+        print("| ID | Name                 | Phone          |")
+        print("+----+----------------------+----------------+")
+
         for r in rows:
-            print(f"{r[0]}. {r[1]} - {r[2]}")
-        print()
+            contact_id, name, phone = r
+            print(f"| {contact_id:<2} | {name:<20} | {phone:<14} |")
+
+        print("+----+----------------------+----------------+")
+        print(f"\nTotal contacts: {len(rows)}\n")
     con.close()
 
 # --- Search contact ---
@@ -74,10 +117,17 @@ def search_contact():
     if not rows:
         print("No matching contacts found!\n")
     else:
-        print("\n--- Matching Contacts ---")
+        print(f"\n--- Matching Contacts for '{keyword}' ---")
+        print("+----+----------------------+----------------+")
+        print("| ID | Name                 | Phone          |")
+        print("+----+----------------------+----------------+")
+
         for r in rows:
-            print(f"{r[0]}. {r[1]} - {r[2]}")
-        print()
+            contact_id, name, phone = r
+            print(f"| {contact_id:<2} | {name:<20} | {phone:<14} |")
+
+        print("+----+----------------------+----------------+")
+        print(f"\nFound {len(rows)} matching contact(s)\n")
     con.close()
 
 # --- Edit contact ---
@@ -158,6 +208,9 @@ def delete_contact():
     print("Contact deleted successfully!\n")
 
 # --- Main menu ---
+# Initialize database and tables on startup
+initialize_database()
+
 while True:
     print("=== PHONEBOOK MENU ===")
     print("1. Add Contact")
