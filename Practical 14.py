@@ -6,7 +6,18 @@ import pickle
 DB_HOST = "localhost"
 DB_USER = "root"
 DB_PASS = "root123"
-DB_NAME = "schooldb"
+DB_NAME = "datadb"
+
+# First connect without database to create it if needed
+temp_conn = mysql.connector.connect(
+    host=DB_HOST,
+    user=DB_USER,
+    password=DB_PASS
+)
+temp_cur = temp_conn.cursor()
+temp_cur.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME}")
+temp_conn.commit()
+temp_conn.close()
 
 conn = mysql.connector.connect(
     host=DB_HOST,
