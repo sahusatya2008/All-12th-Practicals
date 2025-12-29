@@ -1,14 +1,26 @@
-#13) Convert the tables of marks attended by students in MySQL table in CSV data. 
+#13) Convert the tables of marks attended by students in MySQL table in CSV data.
 import mysql.connector
 import csv
 
 # --- Database connection setup ---
+# First connect without database to create it if needed
+temp_conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="root123"
+)
+temp_cur = temp_conn.cursor()
+temp_cur.execute("CREATE DATABASE IF NOT EXISTS marksdb")
+temp_conn.commit()
+temp_conn.close()
+
+# Now connect to the specific database
 conn = mysql.connector.connect(
     host="localhost",
-    user="root",       
+    user="root",
     password="root123",
-    database="schooldb"
-)
+    database="marksdb"
+)    
 cur = conn.cursor()
 
 # --- Create the marks table if not exists ---
@@ -71,8 +83,15 @@ def view_students():
     rows = cur.fetchall()
     if rows:
         print("\n--- Student Marks Table ---")
+        print("+----------+----------------------+-----------+-----------+-------------+---------+------------+")
+        print("| Roll     | Name                 | English   | Physics   | Chemistry   | Maths   | Computer   |")
+        print("+----------+----------------------+-----------+-----------+-------------+---------+------------+")
+
         for row in rows:
-            print(row)
+            roll_no, name, english, physics, chemistry, maths, computer = row
+            print(f"| {roll_no:<8} | {name:<20} | {english:<9} | {physics:<9} | {chemistry:<11} | {maths:<7} | {computer:<10} |")
+
+        print("+----------+----------------------+-----------+-----------+-------------+---------+------------+")
     else:
         print("\n(No records found.)")
 
