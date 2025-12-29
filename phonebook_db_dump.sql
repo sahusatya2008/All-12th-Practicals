@@ -10,8 +10,7 @@ USE phonebook_db;
 CREATE TABLE IF NOT EXISTS contacts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    phone VARCHAR(15) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    phone VARCHAR(15) NOT NULL UNIQUE
 );
 
 -- Insert sample data
@@ -30,7 +29,6 @@ INSERT INTO contacts (name, phone) VALUES
 -- Create indexes for better performance
 CREATE INDEX idx_name ON contacts(name);
 CREATE INDEX idx_phone ON contacts(phone);
-CREATE INDEX idx_created_at ON contacts(created_at);
 
 -- Show table structure
 DESCRIBE contacts;
