@@ -183,9 +183,9 @@ def edit_contact():
             choice = input("Do you want to save it as a copy? (y/n): ").lower()
             if choice == "y":
                 new_name = f"{new_name} (copy)"
-                print(f"✔️ Name will be saved as '{new_name}'.")
+                print(f" Name will be saved as '{new_name}'.")
             else:
-                print("❌ Changes not saved.\n")
+                print(" Changes not saved.\n")
                 con.close()
                 return
 
